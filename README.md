@@ -3,7 +3,7 @@
 A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL.
 
 <div align="center">
-  ![App](https://github.com/user-attachments/assets/b93a4e89-34e9-49c1-8b68-e5ad6fba84e3)
+  <img src="https://github.com/user-attachments/assets/b93a4e89-34e9-49c1-8b68-e5ad6fba84e3" alt="App">
 </div>
 
 ## Tech Stack 💻
