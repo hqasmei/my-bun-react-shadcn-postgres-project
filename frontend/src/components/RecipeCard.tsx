@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Recipe } from "@/types/recipes";
-import { CalendarIcon, Clock, Pencil, Trash2 } from "lucide-react";
+import { CalendarIcon,  Pencil, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -26,15 +26,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
 
   // Get the image URL from either image_url or imageUrl
   const imageUrl = recipe.image_url || recipe.imageUrl;
-  
-  // Check if the recipe has been updated
-  const hasBeenUpdated = recipe.updated_at && recipe.updated_at !== recipe.created_at;
-
-  const handleEdit = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    navigate(`/recipes/${recipe.id}/edit`);
-  };
+   
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -71,7 +63,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
 
   return (
     <div className="relative group">
-      <Link to={`/recipes/${recipe.id}`} className="block">
+      <div onClick={() => navigate(`/recipes/${recipe.id}`)} className="cursor-pointer">
         <motion.div
           whileHover={{ scale: 1.02 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -99,32 +91,35 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                   <span>{formatDate(recipe.created_at)}</span>
                 </div>
               </div>
+              {/* Action buttons always visible in the bottom corner */}
+              <div className="flex gap-2">
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/recipes/${recipe.id}/edit`);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(e);
+                  }}
+                  disabled={isDeleting}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             </CardFooter>
           </Card>
         </motion.div>
-      </Link>
-      
-      {/* Overlay with action buttons */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg flex flex-col justify-end p-4">
-        <div className="flex justify-end gap-2 mb-2">
-          <Button 
-            size="sm" 
-            variant="outline" 
-            className="h-9 px-3 bg-white/90 hover:bg-white border-none text-black font-medium shadow-md"
-            onClick={handleEdit}
-          >
-            <Pencil className="h-4 w-4" />
-          </Button>
-          <Button 
-            size="sm" 
-            variant="destructive" 
-            className="h-9 px-3 font-medium shadow-md"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
       </div>
     </div>
   );
