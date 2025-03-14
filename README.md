@@ -48,12 +48,8 @@ This combination of technologies offers several advantages:
 > **Note:** This project is currently in development. Below is a high-level checklist of remaining tasks.
 
 - [x] Project structure and monorepo setup
-- [x] Frontend and backend basic configuration
-- [ ] Database schema and migrations
-- [ ] Authentication system
-- [ ] Frontend UI components and routing
-- [ ] Backend API endpoints
-- [ ] API integration with frontend
+- [x] Frontend and backend basic configuration 
+- [ ] Authentication system  
 - [ ] Error handling and validation
 - [ ] Production environment configuration
 - [ ] Deployment setup
@@ -69,8 +65,8 @@ This combination of technologies offers several advantages:
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
-cd my-bun-react-shadcn-postgres-project
+git clone git@github.com:hqasmei/recipebudd.git
+cd recipebudd
 ```
 
 2. Install dependencies:
