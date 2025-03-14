@@ -1,4 +1,4 @@
-# Bun React Shadcn PostgreSQL Project 🚀
+# RecipeBudd - A Recipe Management Application
 
 A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL.
 
