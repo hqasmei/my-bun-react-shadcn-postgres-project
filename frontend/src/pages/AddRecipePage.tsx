@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronLeft, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
+import { apiService } from "@/config/api";
 
 export default function AddRecipePage() {
   const navigate = useNavigate();
@@ -69,15 +70,9 @@ export default function AddRecipePage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/api/recipes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...recipe,
-          image_url: recipe.imageUrl, // Map to backend field name
-        }),
+      const response = await apiService.post("/api/recipes", {
+        ...recipe,
+        image_url: recipe.imageUrl,  
       });
 
       if (!response.ok) {

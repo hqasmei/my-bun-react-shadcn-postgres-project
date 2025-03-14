@@ -7,6 +7,7 @@ import RecipeCard from "@/components/RecipeCard";
 import { Recipe } from "@/types/recipes";
 import { Search, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { apiService } from "@/config/api";
 
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -21,7 +22,7 @@ export default function RecipesPage() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("http://localhost:3001/api/recipes");
+        const response = await apiService.get("/api/recipes");
         const data = await response.json();
 
         if (data.recipes) {

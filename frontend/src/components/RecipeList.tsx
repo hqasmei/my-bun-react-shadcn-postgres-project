@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { apiService } from "@/config/api";
 
 interface Recipe {
   id: number;
@@ -35,7 +36,7 @@ export default function RecipeList() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:3001/api/recipes");
+      const response = await apiService.get("/api/recipes");
       const data = await response.json();
 
       if (data.recipes) {
@@ -73,12 +74,7 @@ export default function RecipeList() {
     }
 
     try {
-      const response = await fetch("http://localhost:3001/api/recipes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newRecipe),
-      });
-
+      const response = await apiService.post("/api/recipes", newRecipe);
       const result = await response.json();
 
       if (result.recipe) {
@@ -119,14 +115,10 @@ export default function RecipeList() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/api/recipes/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: editingRecipe.title,
-          ingredients: editingRecipe.ingredients,
-          instructions: editingRecipe.instructions,
-        }),
+      const response = await apiService.put(`/api/recipes/${id}`, {
+        title: editingRecipe.title,
+        ingredients: editingRecipe.ingredients,
+        instructions: editingRecipe.instructions,
       });
 
       const result = await response.json();
@@ -159,10 +151,7 @@ export default function RecipeList() {
   // Delete recipe
   const deleteRecipe = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/recipes/${id}`, {
-        method: "DELETE",
-      });
-
+      const response = await apiService.delete(`/api/recipes/${id}`);
       const result = await response.json();
 
       if (result.success) {

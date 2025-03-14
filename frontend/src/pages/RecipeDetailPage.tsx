@@ -17,6 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { apiService } from "@/config/api";
 
 export default function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -33,7 +34,7 @@ export default function RecipeDetailPage() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`http://localhost:3001/api/recipes/${id}`);
+        const response = await apiService.get(`/api/recipes/${id}`);
 
         if (!response.ok) {
           if (response.status === 404) {
@@ -64,9 +65,7 @@ export default function RecipeDetailPage() {
     if (!id) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/recipes/${id}`, {
-        method: "DELETE",
-      });
+      const response = await apiService.delete(`/api/recipes/${id}`);
 
       if (!response.ok) {
         throw new Error("Failed to delete recipe");

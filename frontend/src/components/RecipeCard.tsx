@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Recipe } from "@/types/recipes";
 import { CalendarIcon,  Pencil, Trash2 } from "lucide-react";
@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useState } from "react";
+import { apiService } from "@/config/api";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -36,9 +37,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
       setIsDeleting(true);
       
       try {
-        const response = await fetch(`http://localhost:3001/api/recipes/${recipe.id}`, {
-          method: "DELETE",
-        });
+        const response = await apiService.delete(`/api/recipes/${recipe.id}`);
         
         if (!response.ok) {
           throw new Error("Failed to delete recipe");

@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Recipe } from "@/types/recipes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { apiService } from "@/config/api";
 
 export default function EditRecipePage() {
   const { id } = useParams<{ id: string }>();
@@ -37,8 +38,8 @@ export default function EditRecipePage() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`http://localhost:3001/api/recipes/${id}`);
-
+        const response = await apiService.get(`/api/recipes/${id}`);
+        
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error("Recipe not found");
@@ -116,15 +117,9 @@ export default function EditRecipePage() {
     setSubmitting(true);
 
     try {
-      const response = await fetch(`http://localhost:3001/api/recipes/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...recipe,
-          image_url: recipe.imageUrl, // Map to backend field name
-        }),
+      const response = await apiService.put(`/api/recipes/${id}`, {
+        ...recipe,
+        image_url: recipe.imageUrl, // Map to backend field name
       });
 
       if (!response.ok) {
