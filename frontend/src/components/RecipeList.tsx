@@ -5,20 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trash2, Edit, Plus, Save, X } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -74,7 +61,11 @@ export default function RecipeList() {
   // Add new recipe
   const addRecipe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newRecipe.title.trim() || !newRecipe.ingredients.trim() || !newRecipe.instructions.trim()) {
+    if (
+      !newRecipe.title.trim() ||
+      !newRecipe.ingredients.trim() ||
+      !newRecipe.instructions.trim()
+    ) {
       toast.error("Missing Information", {
         description: "Please fill in all fields",
       });
@@ -117,7 +108,12 @@ export default function RecipeList() {
 
   // Update recipe
   const updateRecipe = async (id: number) => {
-    if (!editingRecipe || !editingRecipe.title.trim() || !editingRecipe.ingredients.trim() || !editingRecipe.instructions.trim()) {
+    if (
+      !editingRecipe ||
+      !editingRecipe.title.trim() ||
+      !editingRecipe.ingredients.trim() ||
+      !editingRecipe.instructions.trim()
+    ) {
       setEditingRecipe(null);
       return;
     }
@@ -214,10 +210,7 @@ export default function RecipeList() {
         {/* Add new recipe button */}
         {!isAddingRecipe && (
           <div className="mb-6">
-            <Button 
-              onClick={() => setIsAddingRecipe(true)}
-              className="w-full"
-            >
+            <Button onClick={() => setIsAddingRecipe(true)} className="w-full">
               <Plus className="h-4 w-4 mr-2" /> Add New Recipe
             </Button>
           </div>
@@ -235,7 +228,7 @@ export default function RecipeList() {
                 id="title"
                 type="text"
                 value={newRecipe.title}
-                onChange={(e) => setNewRecipe({...newRecipe, title: e.target.value})}
+                onChange={(e) => setNewRecipe({ ...newRecipe, title: e.target.value })}
                 placeholder="Enter recipe title..."
                 className="w-full"
               />
@@ -247,7 +240,7 @@ export default function RecipeList() {
               <Textarea
                 id="ingredients"
                 value={newRecipe.ingredients}
-                onChange={(e) => setNewRecipe({...newRecipe, ingredients: e.target.value})}
+                onChange={(e) => setNewRecipe({ ...newRecipe, ingredients: e.target.value })}
                 placeholder="Enter ingredients (one per line)..."
                 className="w-full min-h-[100px]"
               />
@@ -259,15 +252,15 @@ export default function RecipeList() {
               <Textarea
                 id="instructions"
                 value={newRecipe.instructions}
-                onChange={(e) => setNewRecipe({...newRecipe, instructions: e.target.value})}
+                onChange={(e) => setNewRecipe({ ...newRecipe, instructions: e.target.value })}
                 placeholder="Enter cooking instructions..."
                 className="w-full min-h-[150px]"
               />
             </div>
             <div className="flex justify-end gap-2">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={() => {
                   setIsAddingRecipe(false);
                   setNewRecipe({
@@ -307,37 +300,52 @@ export default function RecipeList() {
                 {editingRecipe?.id === recipe.id ? (
                   <div className="p-4 space-y-4">
                     <div>
-                      <label htmlFor={`edit-title-${recipe.id}`} className="block text-sm font-medium mb-1">
+                      <label
+                        htmlFor={`edit-title-${recipe.id}`}
+                        className="block text-sm font-medium mb-1"
+                      >
                         Recipe Title
                       </label>
                       <Input
                         id={`edit-title-${recipe.id}`}
                         type="text"
                         value={editingRecipe.title}
-                        onChange={(e) => setEditingRecipe({...editingRecipe, title: e.target.value})}
+                        onChange={(e) =>
+                          setEditingRecipe({ ...editingRecipe, title: e.target.value })
+                        }
                         className="w-full"
                         autoFocus
                       />
                     </div>
                     <div>
-                      <label htmlFor={`edit-ingredients-${recipe.id}`} className="block text-sm font-medium mb-1">
+                      <label
+                        htmlFor={`edit-ingredients-${recipe.id}`}
+                        className="block text-sm font-medium mb-1"
+                      >
                         Ingredients
                       </label>
                       <Textarea
                         id={`edit-ingredients-${recipe.id}`}
                         value={editingRecipe.ingredients}
-                        onChange={(e) => setEditingRecipe({...editingRecipe, ingredients: e.target.value})}
+                        onChange={(e) =>
+                          setEditingRecipe({ ...editingRecipe, ingredients: e.target.value })
+                        }
                         className="w-full min-h-[100px]"
                       />
                     </div>
                     <div>
-                      <label htmlFor={`edit-instructions-${recipe.id}`} className="block text-sm font-medium mb-1">
+                      <label
+                        htmlFor={`edit-instructions-${recipe.id}`}
+                        className="block text-sm font-medium mb-1"
+                      >
                         Instructions
                       </label>
                       <Textarea
                         id={`edit-instructions-${recipe.id}`}
                         value={editingRecipe.instructions}
-                        onChange={(e) => setEditingRecipe({...editingRecipe, instructions: e.target.value})}
+                        onChange={(e) =>
+                          setEditingRecipe({ ...editingRecipe, instructions: e.target.value })
+                        }
                         className="w-full min-h-[150px]"
                       />
                     </div>
@@ -397,15 +405,11 @@ export default function RecipeList() {
                     <CardContent className="space-y-4">
                       <div>
                         <h4 className="font-medium mb-2">Ingredients:</h4>
-                        <div className="whitespace-pre-line text-sm">
-                          {recipe.ingredients}
-                        </div>
+                        <div className="whitespace-pre-line text-sm">{recipe.ingredients}</div>
                       </div>
                       <div>
                         <h4 className="font-medium mb-2">Instructions:</h4>
-                        <div className="whitespace-pre-line text-sm">
-                          {recipe.instructions}
-                        </div>
+                        <div className="whitespace-pre-line text-sm">{recipe.instructions}</div>
                       </div>
                     </CardContent>
                   </>

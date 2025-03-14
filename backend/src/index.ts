@@ -86,6 +86,15 @@ app.post("/api/recipes", async (c) => {
       return c.json({ error: "Instructions are required and must be a string" }, 400);
     }
 
+    // Validate optional fields if provided
+    if (body.website_url && typeof body.website_url !== "string") {
+      return c.json({ error: "Website URL must be a string" }, 400);
+    }
+
+    if (body.image_url && typeof body.image_url !== "string") {
+      return c.json({ error: "Image URL must be a string" }, 400);
+    }
+
     // Insert into database
     const newRecipe = await db
       .insert(recipes)
@@ -93,6 +102,8 @@ app.post("/api/recipes", async (c) => {
         title: body.title,
         ingredients: body.ingredients,
         instructions: body.instructions,
+        website_url: body.website_url || null,
+        image_url: body.image_url || null,
       })
       .returning();
 
@@ -115,11 +126,13 @@ app.put("/api/recipes/:id", async (c) => {
     const body = await c.req.json();
 
     // Validate input
-    if ((!body.title && !body.ingredients && !body.instructions) || 
+    if ((!body.title && !body.ingredients && !body.instructions && !body.website_url && !body.image_url) || 
         (body.title && typeof body.title !== "string") ||
         (body.ingredients && typeof body.ingredients !== "string") ||
-        (body.instructions && typeof body.instructions !== "string")) {
-      return c.json({ error: "At least one valid field (title, ingredients, or instructions) is required" }, 400);
+        (body.instructions && typeof body.instructions !== "string") ||
+        (body.website_url && typeof body.website_url !== "string") ||
+        (body.image_url && typeof body.image_url !== "string")) {
+      return c.json({ error: "At least one valid field (title, ingredients, instructions, website_url, or image_url) is required" }, 400);
     }
 
     // Build update object with only provided fields
@@ -127,6 +140,11 @@ app.put("/api/recipes/:id", async (c) => {
     if (body.title) updateData.title = body.title;
     if (body.ingredients) updateData.ingredients = body.ingredients;
     if (body.instructions) updateData.instructions = body.instructions;
+    if (body.website_url !== undefined) updateData.website_url = body.website_url;
+    if (body.image_url !== undefined) updateData.image_url = body.image_url;
+    
+    // Always update the updated_at timestamp when modifying a recipe
+    updateData.updated_at = new Date();
 
     const updatedRecipe = await db
       .update(recipes)
