@@ -6,6 +6,29 @@ A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL
   <img src="https://github.com/user-attachments/assets/b93a4e89-34e9-49c1-8b68-e5ad6fba84e3" alt="App">
 </div>
 
+## About The Project 📖
+
+This project demonstrates a clean, efficient, and modern approach to full-stack web development. It combines the speed of Bun with the flexibility of React and the reliability of PostgreSQL to create a seamless development experience.
+
+### How It Works
+
+The application follows a clear separation of concerns:
+
+- **Frontend**: A React application built with Vite that handles the user interface and client-side logic. React Router v7 manages navigation between different views, while Shadcn UI provides beautiful, accessible components that speed up development without sacrificing customization.
+
+- **Backend**: A Bun-powered server using Hono as a lightweight, fast web framework. The API endpoints communicate with a PostgreSQL database through Drizzle ORM, which provides type-safe database operations and schema management.
+
+- **Data Flow**: When a user interacts with the frontend, React components trigger API calls to the backend. The backend processes these requests, performs necessary database operations using Drizzle ORM, and returns the results to the frontend.
+
+### Why This Tech Stack?
+
+This combination of technologies offers several advantages:
+
+- **Performance**: Bun's speed significantly reduces build times and server response times.
+- **Developer Experience**: TypeScript provides type safety across the entire stack.
+- **Maintainability**: The modular architecture makes it easy to update or replace individual components.
+- **Scalability**: Each part of the stack is designed to handle growth, from the database to the frontend.
+
 ## Tech Stack 💻
 
 - **Frontend** 🎨
@@ -19,6 +42,22 @@ A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL
   - [Hono](https://hono.dev) (web framework)
   - [PostgreSQL](https://www.postgresql.org) database
   - [Drizzle ORM](https://orm.drizzle.team) (SQL toolkit)
+
+## Project Checklist ✅
+
+> **Note:** This project is currently in development. Below is a high-level checklist of remaining tasks.
+
+- [x] Project structure and monorepo setup
+- [x] Frontend and backend basic configuration
+- [ ] Database schema and migrations
+- [ ] Authentication system
+- [ ] Frontend UI components and routing
+- [ ] Backend API endpoints
+- [ ] API integration with frontend
+- [ ] Error handling and validation
+- [ ] Production environment configuration
+- [ ] Deployment setup
+- [ ] Documentation
 
 ## Prerequisites ✅
 
