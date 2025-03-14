@@ -1,11 +1,11 @@
 {
-  "id": "9ddcebb1-c0f9-4e7b-a5ee-d75205393b7c",
+  "id": "c07fcb24-1753-4bd9-815b-8abfb453a95b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.grocery_items": {
-      "name": "grocery_items",
+    "public.recipes": {
+      "name": "recipes",
       "schema": "",
       "columns": {
         "id": {
@@ -14,8 +14,20 @@
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ingredients": {
+          "name": "ingredients",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "instructions": {
+          "name": "instructions",
           "type": "text",
           "primaryKey": false,
           "notNull": true
