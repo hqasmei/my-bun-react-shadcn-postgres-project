@@ -10,6 +10,7 @@ A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL
 
 - **Frontend** 🎨
   - [React](https://react.dev) with [Vite](https://vitejs.dev)
+  - [React Router](https://reactrouter.com) v7 (routing)
   - [Shadcn UI](https://ui.shadcn.com) components
   - [TypeScript](https://www.typescriptlang.org)
   
@@ -17,6 +18,7 @@ A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL
   - [Bun](https://bun.sh) runtime
   - [Hono](https://hono.dev) (web framework)
   - [PostgreSQL](https://www.postgresql.org) database
+  - [Drizzle ORM](https://orm.drizzle.team) (SQL toolkit)
 
 ## Prerequisites ✅
 
