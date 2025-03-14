@@ -11,13 +11,14 @@ A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL
 ## Tech Stack 💻
 
 - **Frontend** 🎨
-  - React with Vite
-  - Shadcn UI components
-  - TypeScript
+  - [React](https://react.dev) with [Vite](https://vitejs.dev)
+  - [Shadcn UI](https://ui.shadcn.com) components
+  - [TypeScript](https://www.typescriptlang.org)
   
 - **Backend** ⚙️
-  - Bun runtime
-  - PostgreSQL database
+  - [Bun](https://bun.sh) runtime
+  - [Hono](https://hono.dev) (web framework)
+  - [PostgreSQL](https://www.postgresql.org) database
 
 ## Prerequisites ✅
 
