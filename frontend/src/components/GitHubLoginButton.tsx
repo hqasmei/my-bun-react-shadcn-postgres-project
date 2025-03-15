@@ -1,4 +1,3 @@
-// components/GitHubLoginButton.tsx
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { Github } from "lucide-react";

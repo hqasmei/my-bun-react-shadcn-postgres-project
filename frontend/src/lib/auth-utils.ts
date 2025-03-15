@@ -1,4 +1,4 @@
-// src/lib/auth-utils.ts
+ 
 import { authClient } from "./auth-client";
 import { NavigateFunction } from "react-router-dom";
 
