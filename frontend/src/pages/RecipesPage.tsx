@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import RecipeCard from "@/components/RecipeCard";
-import { Recipe } from "@/types/recipes";
+import { Recipe } from "@/types/recipe";
 import { Search, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiService } from "@/config/api";
@@ -32,18 +32,18 @@ export default function RecipesPage() {
       }
       return true;
     };
-    
+
     const fetchRecipes = async () => {
       setLoading(true);
       setError(null);
-      
+
       // First check if user is authenticated
       const isAuth = await checkAuth();
       if (!isAuth) return;
-      
+
       try {
         const response = await apiService.get("/api/recipes");
-        
+
         // Handle unauthorized response
         if (response.status === 401) {
           toast.error("Authentication required", {
@@ -52,12 +52,12 @@ export default function RecipesPage() {
           navigate("/login");
           return;
         }
-        
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || "Failed to fetch recipes");
         }
-        
+
         const data = await response.json();
 
         if (data.recipes) {

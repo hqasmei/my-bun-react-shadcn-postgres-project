@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronLeft, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
-import { Recipe } from "@/types/recipes";
+import { Recipe } from "@/types/recipe";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiService } from "@/config/api";
