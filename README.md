@@ -3,7 +3,7 @@
 A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL, featuring secure GitHub authentication.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/b5dc8f10-30a0-45e0-aa5e-cf11caec721b" alt="App">
+  <img src="https://github.com/user-attachments/assets/ef3909c6-f371-4fb7-80f2-71b4c64eb9ef" alt="App">
 </div>
 
 ## About The Project 📖
@@ -40,7 +40,7 @@ This combination of technologies offers several advantages:
   - [React Router](https://reactrouter.com) v7 (routing)
   - [Shadcn UI](https://ui.shadcn.com) components
   - [TypeScript](https://www.typescriptlang.org)
-  - [Better Auth](https://betterauth.com) for GitHub authentication
+  - [Better Auth](https://better-auth.com) for GitHub authentication
   
 - **Backend** ⚙️
   - [Bun](https://bun.sh) runtime
