@@ -36,7 +36,7 @@ This combination of technologies offers several advantages:
   - [React Router](https://reactrouter.com) v7 (routing)
   - [Shadcn UI](https://ui.shadcn.com) components
   - [TypeScript](https://www.typescriptlang.org)
-  - [Better Auth](https://betterauth.com) for GitHub authentication
+  - [Better Auth](https://better-auth.com) for GitHub authentication
   
 - **Backend** ⚙️
   - [Bun](https://bun.sh) runtime
