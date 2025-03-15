@@ -14,7 +14,8 @@ export function GitHubLoginButton() {
     try {
       // Use the social method as specified in the Better Auth GitHub documentation
       const result = await authClient.signIn.social({
-        provider: "github"
+        provider: "github",
+        callbackURL: "http://localhost:3000/recipes", // Specify where to redirect after successful authentication
       });
 
       console.log("Auth result:", result);
