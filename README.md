@@ -1,6 +1,6 @@
 # RecipeBudd - A Recipe Management Application
 
-A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL.
+A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL, featuring secure GitHub authentication.
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/b5dc8f10-30a0-45e0-aa5e-cf11caec721b" alt="App">
@@ -8,17 +8,19 @@ A modern full-stack application built with Bun, React, Shadcn UI, and PostgreSQL
 
 ## About The Project 📖
 
-This project demonstrates a clean, efficient, and modern approach to full-stack web development. It combines the speed of Bun with the flexibility of React and the reliability of PostgreSQL to create a seamless development experience.
+This project demonstrates a clean, efficient, and modern approach to full-stack web development. It combines the speed of Bun with the flexibility of React and the reliability of PostgreSQL to create a seamless development experience, while providing secure user authentication through GitHub.
 
 ### How It Works
 
 The application follows a clear separation of concerns:
 
-- **Frontend**: A React application built with Vite that handles the user interface and client-side logic. React Router v7 manages navigation between different views, while Shadcn UI provides beautiful, accessible components that speed up development without sacrificing customization.
+- **Frontend**: A React application built with Vite that handles the user interface and client-side logic. React Router v7 manages navigation between different views, while Shadcn UI provides beautiful, accessible components that speed up development without sacrificing customization. User authentication is handled through Better Auth's client SDK.
 
-- **Backend**: A Bun-powered server using Hono as a lightweight, fast web framework. The API endpoints communicate with a PostgreSQL database through Drizzle ORM, which provides type-safe database operations and schema management.
+- **Backend**: A Bun-powered server using Hono as a lightweight, fast web framework. The API endpoints communicate with a PostgreSQL database through Drizzle ORM, which provides type-safe database operations and schema management. The backend also manages authentication flows with GitHub through Better Auth, handling OAuth callbacks and session management.
 
-- **Data Flow**: When a user interacts with the frontend, React components trigger API calls to the backend. The backend processes these requests, performs necessary database operations using Drizzle ORM, and returns the results to the frontend.
+- **Authentication**: The application uses Better Auth for GitHub social login. The authentication flow begins on the frontend where users initiate the GitHub OAuth process. The backend handles the OAuth callback, validates the user, and establishes a secure session. This approach provides a seamless login experience while maintaining security best practices.
+
+- **Data Flow**: When a user interacts with the frontend, React components trigger API calls to the backend. The backend processes these requests, performs necessary database operations using Drizzle ORM, and returns the results to the frontend. Protected routes and API endpoints verify authentication status before allowing access to private data.
 
 ### Why This Tech Stack?
 
@@ -28,6 +30,8 @@ This combination of technologies offers several advantages:
 - **Developer Experience**: TypeScript provides type safety across the entire stack.
 - **Maintainability**: The modular architecture makes it easy to update or replace individual components.
 - **Scalability**: Each part of the stack is designed to handle growth, from the database to the frontend.
+- **Security**: Better Auth provides a robust authentication system that follows OAuth best practices, eliminating the need to build complex authentication flows from scratch.
+- **Cross-Origin Architecture**: The separate frontend and backend servers (ports 3000 and 3001) demonstrate proper CORS configuration for secure cross-origin requests with authentication.
 
 ## Tech Stack 💻
 
@@ -96,7 +100,7 @@ bun run dev:frontend
 bun run dev:backend
 ```
 
-The frontend will be available at `http://localhost:5173` and the backend at `http://localhost:3000`.
+The frontend will be available at `http://localhost:3000` and the backend at `http://localhost:3001`.
 
 ## Project Structure 📁
 
