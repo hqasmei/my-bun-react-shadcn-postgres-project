@@ -5,6 +5,6 @@ export default defineConfig({
   schema: "./src/schema.ts",
   out: "./drizzle",
   dbCredentials: {
-    url: "postgresql://postgres:postgres@localhost:5432/yourdbname",
+    url: "postgresql://postgres:postgres@localhost:5432/recipebudd",
   },
 });
