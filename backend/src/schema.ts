@@ -7,6 +7,7 @@ export const recipes = pgTable("recipes", {
   instructions: text("instructions").notNull(),
   website_url: text("website_url"),
   image_url: text("image_url"),
+  userId: text("userId").notNull().references(() => user.id),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

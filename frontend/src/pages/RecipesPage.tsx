@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -8,6 +8,8 @@ import { Recipe } from "@/types/recipes";
 import { Search, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiService } from "@/config/api";
+import { authUtils } from "@/lib/auth-utils";
+import { toast } from "sonner";
 
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -15,33 +17,69 @@ export default function RecipesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  // Fetch all recipes
+  // Check authentication when component mounts
   useEffect(() => {
+    const checkAuth = async () => {
+      const isAuthenticated = await authUtils.isAuthenticated();
+      if (!isAuthenticated) {
+        toast.error("Authentication required", {
+          description: "Please log in to view your recipes",
+        });
+        navigate("/login");
+        return false;
+      }
+      return true;
+    };
+    
     const fetchRecipes = async () => {
       setLoading(true);
       setError(null);
+      
+      // First check if user is authenticated
+      const isAuth = await checkAuth();
+      if (!isAuth) return;
+      
       try {
         const response = await apiService.get("/api/recipes");
+        
+        // Handle unauthorized response
+        if (response.status === 401) {
+          toast.error("Authentication required", {
+            description: "Please log in to view your recipes",
+          });
+          navigate("/login");
+          return;
+        }
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to fetch recipes");
+        }
+        
         const data = await response.json();
 
         if (data.recipes) {
           setRecipes(data.recipes);
           setFilteredRecipes(data.recipes);
+        } else if (data.error) {
+          console.error("API error:", data.error);
+          setError(data.error);
         } else {
           console.error("Unexpected response format:", data);
           setError("Unexpected response format from server");
         }
       } catch (error) {
         console.error("Error fetching recipes:", error);
-        setError("Failed to fetch recipes");
+        setError(error instanceof Error ? error.message : "Failed to fetch recipes");
       } finally {
         setLoading(false);
       }
     };
 
     fetchRecipes();
-  }, []);
+  }, [navigate]);
 
   // Filter recipes based on search query
   useEffect(() => {

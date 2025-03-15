@@ -95,15 +95,13 @@ function App() {
                     </Link>
                     {user ? (
                       <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" onClick={handleLogout}>
+                        <Button size="sm" onClick={handleLogout}>
                           Sign Out
                         </Button>
                       </div>
                     ) : (
                       <Link to="/login">
-                        <Button variant="ghost" size="sm">
-                          Sign In
-                        </Button>
+                        <Button size="sm">Sign In</Button>
                       </Link>
                     )}
                   </nav>
@@ -138,15 +136,13 @@ function App() {
                     </Link>
                     {user ? (
                       <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" onClick={handleLogout}>
+                        <Button size="sm" onClick={handleLogout}>
                           Sign Out
                         </Button>
                       </div>
                     ) : (
                       <Link to="/login">
-                        <Button variant="ghost" size="sm">
-                          Sign In
-                        </Button>
+                        <Button size="sm">Sign In</Button>
                       </Link>
                     )}
                   </nav>

@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import postgres from "postgres";
 import { recipes } from "./schema";
 import { auth } from "./auth"; // Import the auth configuration
@@ -72,7 +72,15 @@ app.get("/api/session", async (c) => {
 // Get all recipes
 app.get("/api/recipes", async (c) => {
   try {
-    const items = await db.select().from(recipes);
+    const user = c.get("user");
+    
+    // Check if user is authenticated
+    if (!user) {
+      return c.json({ error: "Authentication required" }, 401);
+    }
+    
+    // Return only the authenticated user's recipes
+    const items = await db.select().from(recipes).where(eq(recipes.userId, user.id));
     return c.json({ recipes: items });
   } catch (error) {
     console.error("Error fetching recipes:", error);
@@ -89,10 +97,17 @@ app.get("/api/recipes/:id", async (c) => {
   }
 
   try {
+    const user = c.get("user");
+    
+    // Check if user is authenticated
+    if (!user) {
+      return c.json({ error: "Authentication required" }, 401);
+    }
+    
     const item = await db
       .select()
       .from(recipes)
-      .where(eq(recipes.id, id))
+      .where(and(eq(recipes.id, id), eq(recipes.userId, user.id)))
       .limit(1);
 
     if (item.length === 0) {
@@ -109,6 +124,13 @@ app.get("/api/recipes/:id", async (c) => {
 // Create a new recipe
 app.post("/api/recipes", async (c) => {
   try {
+    const user = c.get("user");
+    
+    // Check if user is authenticated
+    if (!user) {
+      return c.json({ error: "Authentication required" }, 401);
+    }
+    
     const body = await c.req.json();
 
     // Validate input
@@ -139,7 +161,7 @@ app.post("/api/recipes", async (c) => {
       return c.json({ error: "Image URL must be a string" }, 400);
     }
 
-    // Insert into database
+    // Insert into database with user ID
     const newRecipe = await db
       .insert(recipes)
       .values({
@@ -148,6 +170,7 @@ app.post("/api/recipes", async (c) => {
         instructions: body.instructions,
         website_url: body.website_url || null,
         image_url: body.image_url || null,
+        userId: user.id, // Associate recipe with the authenticated user
       })
       .returning();
 
@@ -167,6 +190,24 @@ app.put("/api/recipes/:id", async (c) => {
   }
 
   try {
+    const user = c.get("user");
+    
+    // Check if user is authenticated
+    if (!user) {
+      return c.json({ error: "Authentication required" }, 401);
+    }
+    
+    // Check if the recipe belongs to the user
+    const existingRecipe = await db
+      .select()
+      .from(recipes)
+      .where(and(eq(recipes.id, id), eq(recipes.userId, user.id)))
+      .limit(1);
+      
+    if (existingRecipe.length === 0) {
+      return c.json({ error: "Recipe not found or you don't have permission to update it" }, 404);
+    }
+    
     const body = await c.req.json();
 
     // Validate input
@@ -209,10 +250,6 @@ app.put("/api/recipes/:id", async (c) => {
       .where(eq(recipes.id, id))
       .returning();
 
-    if (updatedRecipe.length === 0) {
-      return c.json({ error: "Recipe not found" }, 404);
-    }
-
     return c.json({ recipe: updatedRecipe[0] });
   } catch (error) {
     console.error("Error updating recipe:", error);
@@ -229,14 +266,28 @@ app.delete("/api/recipes/:id", async (c) => {
   }
 
   try {
+    const user = c.get("user");
+    
+    // Check if user is authenticated
+    if (!user) {
+      return c.json({ error: "Authentication required" }, 401);
+    }
+    
+    // Check if the recipe belongs to the user
+    const existingRecipe = await db
+      .select()
+      .from(recipes)
+      .where(and(eq(recipes.id, id), eq(recipes.userId, user.id)))
+      .limit(1);
+      
+    if (existingRecipe.length === 0) {
+      return c.json({ error: "Recipe not found or you don't have permission to delete it" }, 404);
+    }
+
     const deletedRecipe = await db
       .delete(recipes)
       .where(eq(recipes.id, id))
       .returning();
-
-    if (deletedRecipe.length === 0) {
-      return c.json({ error: "Recipe not found" }, 404);
-    }
 
     return c.json({ success: true, recipe: deletedRecipe[0] });
   } catch (error) {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { ChevronLeft, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { apiService } from "@/config/api";
+import { authUtils } from "@/lib/auth-utils";
 
 export default function AddRecipePage() {
   const navigate = useNavigate();
@@ -20,6 +21,21 @@ export default function AddRecipePage() {
     website_url: "",
   });
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  // Check authentication when component mounts
+  useEffect(() => {
+    const checkAuth = async () => {
+      const isAuthenticated = await authUtils.isAuthenticated();
+      if (!isAuthenticated) {
+        toast.error("Authentication required", {
+          description: "Please log in to create recipes",
+        });
+        navigate("/login");
+      }
+    };
+    
+    checkAuth();
+  }, [navigate]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -75,8 +91,18 @@ export default function AddRecipePage() {
         image_url: recipe.imageUrl,
       });
 
+      // Handle authentication errors
+      if (response.status === 401) {
+        toast.error("Authentication required", {
+          description: "Please log in to create recipes",
+        });
+        navigate("/login");
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error("Failed to create recipe");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create recipe");
       }
 
       const data = await response.json();
@@ -92,7 +118,7 @@ export default function AddRecipePage() {
     } catch (error) {
       console.error("Error creating recipe:", error);
       toast.error("Failed to create recipe", {
-        description: "Please try again later",
+        description: error instanceof Error ? error.message : "Please try again later",
       });
     } finally {
       setLoading(false);

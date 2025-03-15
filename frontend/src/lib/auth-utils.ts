@@ -1,5 +1,14 @@
 // src/lib/auth-utils.ts
 import { authClient } from "./auth-client";
+import { NavigateFunction } from "react-router-dom";
+
+// Create a navigation function that can be used with the router
+let navigate: NavigateFunction | null = null;
+
+// Function to set the navigate function from a component
+export const setNavigate = (navigateFunction: NavigateFunction) => {
+  navigate = navigateFunction;
+};
 
 export const authUtils = {
   // Check if user is logged in
@@ -28,11 +37,34 @@ export const authUtils = {
   login: () => {
     authClient.signIn.social({
       provider: "github",
+      // Don't specify callbackURL here - let the backend handle redirects
     });
   },
 
-  // Logout
+  // Simplified logout to prevent backend crashes
   logout: async () => {
-    await authClient.signOut();
-  },
+    try {
+      // First, invalidate the session on the client side
+      localStorage.removeItem("auth_session");
+      sessionStorage.removeItem("auth_session");
+      
+      // Then send the signOut request with proper error handling
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            console.log("Successfully signed out");
+            window.location.href = "/login";
+          },
+          onError: (error) => {
+            console.error("Sign-out error:", error);
+            // Still redirect to login page on error
+            window.location.href = "/login";
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Exception during sign-out:", error);
+      window.location.href = "/login";
+    }
+  }
 };
