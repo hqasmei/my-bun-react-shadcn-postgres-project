@@ -39,7 +39,7 @@ export default function EditRecipePage() {
       setError(null);
       try {
         const response = await apiService.get(`/api/recipes/${id}`);
-        
+
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error("Recipe not found");

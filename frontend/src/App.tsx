@@ -4,13 +4,26 @@ import { Button } from "@/components/ui/button";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useState, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { authUtils } from "./lib/auth-utils";
+
+// Define the user type based on Better Auth documentation
+interface User {
+  id: string;
+  email?: string;
+  name?: string;
+  image?: string | null;
+  emailVerified?: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 function App() {
+  const [user, setUser] = useState<User | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
   const location = useLocation();
   const isHomePage = location.pathname === "/";
-  
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
     if (latest > 10 && previous <= 10) {
@@ -19,6 +32,24 @@ function App() {
       setIsScrolled(false);
     }
   });
+
+  useEffect(() => {
+    // Check if user is logged in when component mounts
+    const checkUser = async () => {
+      const currentUser = await authUtils.getCurrentUser();
+      setUser(currentUser as User | null);
+    };
+
+    checkUser();
+
+    // You can set up a polling mechanism or event listeners
+    // to check for auth changes if needed
+  }, []);
+
+  const handleLogout = async () => {
+    await authUtils.logout();
+    setUser(null);
+  };
 
   return (
     <HelmetProvider>
@@ -34,13 +65,13 @@ function App() {
         {isHomePage ? (
           <>
             {/* Scroll-aware header for home page only */}
-            <motion.header 
+            <motion.header
               className="fixed top-0 left-0 right-0 z-50 w-full bg-background backdrop-blur-sm"
               initial={{ borderBottomColor: "rgba(0,0,0,0)", boxShadow: "none" }}
-              animate={{ 
+              animate={{
                 borderBottomColor: isScrolled ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0)",
                 boxShadow: isScrolled ? "0 1px 3px rgba(0,0,0,0.05)" : "none",
-                borderBottomWidth: isScrolled ? "1px" : "0px"
+                borderBottomWidth: isScrolled ? "1px" : "0px",
               }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
@@ -62,11 +93,24 @@ function App() {
                         Recipes
                       </Button>
                     </Link>
+                    {user ? (
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" onClick={handleLogout}>
+                          Sign Out
+                        </Button>
+                      </div>
+                    ) : (
+                      <Link to="/login">
+                        <Button variant="ghost" size="sm">
+                          Sign In
+                        </Button>
+                      </Link>
+                    )}
                   </nav>
                 </div>
               </div>
             </motion.header>
-            
+
             {/* Spacer for fixed header */}
             <div className="h-[72px]"></div>
           </>
@@ -92,6 +136,19 @@ function App() {
                         Recipes
                       </Button>
                     </Link>
+                    {user ? (
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" onClick={handleLogout}>
+                          Sign Out
+                        </Button>
+                      </div>
+                    ) : (
+                      <Link to="/login">
+                        <Button variant="ghost" size="sm">
+                          Sign In
+                        </Button>
+                      </Link>
+                    )}
                   </nav>
                 </div>
               </div>

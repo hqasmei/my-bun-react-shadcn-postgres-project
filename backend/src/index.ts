@@ -4,31 +4,69 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { eq } from "drizzle-orm";
 import postgres from "postgres";
 import { recipes } from "./schema";
+import { auth } from "./auth"; // Import the auth configuration
 
 // Create a PostgreSQL connection
 const sql = postgres(process.env.DATABASE_URL!);
 // Initialize drizzle
 const db = drizzle(sql);
 
-// Create Hono app
-const app = new Hono();
+// Create Hono app with session type definitions
+const app = new Hono<{
+  Variables: {
+    user: typeof auth.$Infer.Session.user | null;
+    session: typeof auth.$Infer.Session.session | null;
+  };
+}>();
 
-// Add CORS middleware to allow requests from your frontend
+// Add CORS middleware with more permissive settings
 app.use(
   "/*",
   cors({
-    origin: ["http://localhost:3000"], // Add your frontend URL
-    allowMethods: ["GET", "POST", "PUT", "DELETE"],
-    allowHeaders: ["Content-Type", "Authorization"],
-    exposeHeaders: ["Content-Length"],
+    origin: ["http://localhost:3000"], // Your frontend URL
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowHeaders: ["Content-Type", "Authorization", "Cookie", "Set-Cookie", "*"],
+    exposeHeaders: ["Content-Length", "Set-Cookie", "*"],
     maxAge: 600,
     credentials: true,
   })
 );
 
-// Add a health check endpoint
-app.get("/", (c) => {
-  return c.json({ message: "Recipe API is running!" });
+// Add auth session middleware
+app.use("*", async (c, next) => {
+  const session = await auth.api.getSession({ headers: c.req.raw.headers });
+
+  if (!session) {
+    c.set("user", null);
+    c.set("session", null);
+    return next();
+  }
+
+  c.set("user", session.user);
+  c.set("session", session.session);
+  return next();
+});
+
+// Mount the Better Auth handler (only once!) 
+app.on(["GET", "POST", "OPTIONS", "PUT", "DELETE", "PATCH"], "/api/auth/*", (c) => {
+  console.log("Auth request:", c.req.method, c.req.path, {
+    headers: Object.fromEntries(c.req.raw.headers.entries()),
+    url: c.req.url,
+  });
+  return auth.handler(c.req.raw);
+});
+
+// Get session info
+app.get("/api/session", async (c) => {
+  const session = c.get("session");
+  const user = c.get("user");
+
+  if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+  return c.json({
+    session,
+    user,
+  });
 });
 
 // Get all recipes
@@ -77,13 +115,19 @@ app.post("/api/recipes", async (c) => {
     if (!body.title || typeof body.title !== "string") {
       return c.json({ error: "Title is required and must be a string" }, 400);
     }
-    
+
     if (!body.ingredients || typeof body.ingredients !== "string") {
-      return c.json({ error: "Ingredients are required and must be a string" }, 400);
+      return c.json(
+        { error: "Ingredients are required and must be a string" },
+        400
+      );
     }
-    
+
     if (!body.instructions || typeof body.instructions !== "string") {
-      return c.json({ error: "Instructions are required and must be a string" }, 400);
+      return c.json(
+        { error: "Instructions are required and must be a string" },
+        400
+      );
     }
 
     // Validate optional fields if provided
@@ -126,13 +170,25 @@ app.put("/api/recipes/:id", async (c) => {
     const body = await c.req.json();
 
     // Validate input
-    if ((!body.title && !body.ingredients && !body.instructions && !body.website_url && !body.image_url) || 
-        (body.title && typeof body.title !== "string") ||
-        (body.ingredients && typeof body.ingredients !== "string") ||
-        (body.instructions && typeof body.instructions !== "string") ||
-        (body.website_url && typeof body.website_url !== "string") ||
-        (body.image_url && typeof body.image_url !== "string")) {
-      return c.json({ error: "At least one valid field (title, ingredients, instructions, website_url, or image_url) is required" }, 400);
+    if (
+      (!body.title &&
+        !body.ingredients &&
+        !body.instructions &&
+        !body.website_url &&
+        !body.image_url) ||
+      (body.title && typeof body.title !== "string") ||
+      (body.ingredients && typeof body.ingredients !== "string") ||
+      (body.instructions && typeof body.instructions !== "string") ||
+      (body.website_url && typeof body.website_url !== "string") ||
+      (body.image_url && typeof body.image_url !== "string")
+    ) {
+      return c.json(
+        {
+          error:
+            "At least one valid field (title, ingredients, instructions, website_url, or image_url) is required",
+        },
+        400
+      );
     }
 
     // Build update object with only provided fields
@@ -140,9 +196,10 @@ app.put("/api/recipes/:id", async (c) => {
     if (body.title) updateData.title = body.title;
     if (body.ingredients) updateData.ingredients = body.ingredients;
     if (body.instructions) updateData.instructions = body.instructions;
-    if (body.website_url !== undefined) updateData.website_url = body.website_url;
+    if (body.website_url !== undefined)
+      updateData.website_url = body.website_url;
     if (body.image_url !== undefined) updateData.image_url = body.image_url;
-    
+
     // Always update the updated_at timestamp when modifying a recipe
     updateData.updated_at = new Date();
 

@@ -1,7 +1,7 @@
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Recipe } from "@/types/recipes";
-import { CalendarIcon,  Pencil, Trash2 } from "lucide-react";
+import { CalendarIcon, Pencil, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -27,26 +27,25 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
 
   // Get the image URL from either image_url or imageUrl
   const imageUrl = recipe.image_url || recipe.imageUrl;
-   
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (window.confirm(`Are you sure you want to delete "${recipe.title}"?`)) {
       setIsDeleting(true);
-      
+
       try {
         const response = await apiService.delete(`/api/recipes/${recipe.id}`);
-        
+
         if (!response.ok) {
           throw new Error("Failed to delete recipe");
         }
-        
+
         toast.success("Recipe deleted", {
           description: `"${recipe.title}" has been removed from your collection`,
         });
-        
+
         // Force a refresh of the page to update the recipe list
         window.location.reload();
       } catch (error) {
@@ -92,9 +91,9 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
               </div>
               {/* Action buttons always visible in the bottom corner */}
               <div className="flex gap-2">
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
+                <Button
+                  size="sm"
+                  variant="ghost"
                   className="h-8 w-8 p-0"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -103,9 +102,9 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
+                <Button
+                  size="sm"
+                  variant="ghost"
                   className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
                   onClick={(e) => {
                     e.stopPropagation();

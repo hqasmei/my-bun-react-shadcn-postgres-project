@@ -22,6 +22,27 @@
       "when": 1741930500599,
       "tag": "0002_hesitant_gertrude_yorkes",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1741989090421,
+      "tag": "0003_known_skaar",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1741992370441,
+      "tag": "0004_ordinary_machine_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1741992632353,
+      "tag": "0005_real_triathlon",
+      "breakpoints": true
     }
   ]
 }

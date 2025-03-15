@@ -72,7 +72,7 @@ export default function AddRecipePage() {
     try {
       const response = await apiService.post("/api/recipes", {
         ...recipe,
-        image_url: recipe.imageUrl,  
+        image_url: recipe.imageUrl,
       });
 
       if (!response.ok) {

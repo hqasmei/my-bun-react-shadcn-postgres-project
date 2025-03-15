@@ -137,11 +137,7 @@ export default function HomePage() {
             <p className="mt-2 text-muted-foreground">
               Join thousands of home cooks who trust RecipeBudd to organize their recipes
             </p>
-            <Button
-              size="lg"
-              className="mt-6 gap-2"
-              onClick={() => navigate("/recipes")}
-            >
+            <Button size="lg" className="mt-6 gap-2" onClick={() => navigate("/recipes")}>
               Get Started
               <ChevronRight className="h-4 w-4" />
             </Button>
