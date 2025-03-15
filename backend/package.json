@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "bun --watch run src/index.ts",
     "start": "bun src/index.ts",
-    "seed": "bun run src/seed.ts",
     "migrate": "bun run src/migrate.ts",
     "generate": "bunx drizzle-kit generate"
   },
